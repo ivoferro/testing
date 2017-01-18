@@ -7,6 +7,9 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -23,6 +26,16 @@ import javax.swing.border.EmptyBorder;
 public class MainFrame extends JFrame {
 
     /**
+     * The resource bundle.
+     */
+    private ResourceBundle resourceBundle;
+
+    /**
+     * The presentation label.
+     */
+    private JLabel presentationLabel;
+
+    /**
      * The empty border.
      */
     private static final EmptyBorder EMPTY_BORDER = new EmptyBorder(20, 20, 20, 20);
@@ -36,7 +49,9 @@ public class MainFrame extends JFrame {
      * Creates an instance of main frame.
      */
     public MainFrame() {
-        super("Window Title");
+
+        resourceBundle = ResourceBundle.getBundle("languages.MessagesBundle");
+        setTitle(resourceBundle.getString("window_title"));
 
         createComponents();
 
@@ -65,7 +80,7 @@ public class MainFrame extends JFrame {
      * @return presentation label
      */
     private JLabel createPresentationLabel() {
-        JLabel presentationLabel = new JLabel("Presentation Label", SwingConstants.CENTER);
+        presentationLabel = new JLabel(resourceBundle.getString("presentation"), SwingConstants.CENTER);
         Font font = new Font("Courier New", Font.BOLD, 16);
         presentationLabel.setFont(font);
         return presentationLabel;
@@ -80,11 +95,38 @@ public class MainFrame extends JFrame {
         JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
         JButton enButton = new JButton("EN");
+        enButton.addActionListener((ActionEvent ae) -> {
+            Locale locale = new Locale("en", "GB");
+            resourceBundle = ResourceBundle.getBundle("languages.MessagesBundle", locale);
+            refreshText();
+        });
+
         JButton ptButton = new JButton("PT");
+        ptButton.addActionListener((ActionEvent ae) -> {
+            Locale locale = new Locale("pt", "PT");
+            resourceBundle = ResourceBundle.getBundle("languages.MessagesBundle", locale);
+            refreshText();
+        });
+
+        JButton plButton = new JButton("PL");
+        plButton.addActionListener((ActionEvent ae) -> {
+            Locale locale = new Locale("pl", "PL");
+            resourceBundle = ResourceBundle.getBundle("languages.MessagesBundle", locale);
+            refreshText();
+        });
 
         buttonsPanel.add(enButton);
         buttonsPanel.add(ptButton);
+        buttonsPanel.add(plButton);
 
         return buttonsPanel;
+    }
+
+    /**
+     * Refresh the text.
+     */
+    private void refreshText() {
+        setTitle(resourceBundle.getString("window_title"));
+        presentationLabel.setText(resourceBundle.getString("presentation"));
     }
 }
